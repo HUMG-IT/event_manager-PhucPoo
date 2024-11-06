@@ -12,6 +12,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   localstore: ^1.4.0
+
   syncfusion_flutter_calendar: ^27.1.58
 
 dev_dependencies:

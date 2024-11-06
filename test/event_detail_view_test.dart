@@ -5,9 +5,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart'
 import 'package:event_manager/test/event_service_test.dart';
 import 'package:event_manager/test/event_model_test.dart';
 
-// ignore: unused_import
-import 'event_service_test.dart';
-
 // Màn hình chi tiết sự kiện, cho phép thêm mới hoặc cập nhật
 class EventDetailView extends StatefulWidget {
   final EventModel event;
