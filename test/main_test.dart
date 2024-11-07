@@ -1,54 +1,22 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:event_manager/main.dart';
+import 'package:event_manager/event/event_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+void main() {
+  testWidgets('MainApp khởi chạy và hiển thị EventView',
+      (WidgetTester tester) async {
+    // Xây dựng ứng dụng
+    await tester.pumpWidget(const MainApp());
 
-import 'event_model_test.dart';
+    // Lấy AppLocalizations
+    final al = await AppLocalizations.delegate.load(const Locale('vi'));
 
-// DataSource: Tham khảo thư viện syncfusion_flutter_calendar tại http://pub.dev
-class EventDataSource extends CalendarDataSource {
-  EventDataSource(List<EventModel> source) {
-    appointments = source;
-  }
+    // Kiểm tra xem tiêu đề ứng dụng được hiển thị
+    expect(find.text(al.appTitle), findsOneWidget);
 
-  @override
-  DateTime getStartTime(int index) {
-    EventModel item = appointments!.elementAt(index);
-    return item.startTime;
-  }
-
-  @override
-  DateTime getEndTime(int index) {
-    EventModel item = appointments!.elementAt(index);
-    return item.endTime;
-  }
-
-  @override
-  String getSubbject(int index) {
-    EventModel item = appointments!.elementAt(index);
-    return item.subject;
-  }
-
-  @override
-  String? getNotes(int index) {
-    EventModel item = appointments!.elementAt(index);
-    return item.notes;
-  }
-
-  @override
-  bool isAllDay(int index) {
-    EventModel item = appointments!.elementAt(index);
-    return item.isAllDay;
-  }
-
-  @override
-  String? getRecurrenceRule(int index) {
-    EventModel item = appointments!.elementAt(index);
-    return item.recurrenceRule;
-  }
-
-  @override
-  Color getColor(int index) {
-    EventModel item = appointments!.elementAt(index);
-    return item.isAllDay ? const Color(0xFF0F8644) : super.getColor(index);
-  }
+    // Kiểm tra xem EventView được hiển thị
+    expect(find.byType(EventView), findsOneWidget);
+  });
 }

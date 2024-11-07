@@ -1,136 +1,41 @@
-import 'package:event_manager/event/event_service.dart';
-import 'package:event_manager/event/main.dart';
-import 'package:event_manager/event/event_detail_view.dart';
-import 'package:event_manager/event/event_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
-class EventView extends StatefulWidget {
-  const EventView({super.key});
+import 'package:event_manager/event/event_view.dart';
 
-  @override
-  State<EventView> createState() => _EventViewState();
-}
-
-class _EventViewState extends State<EventView> {
-  final eventService = EventService();
-  // Danh sách sự kiện
-  List<EventModel> items = [];
-
-  // Tạo CalendarController để điều khiển SfCalendar
-  final calendarController = CalendarController();
-
-  @override
-  void initState() {
-    super.initState();
-    calendarController.view = CalendarView.day;
-    loadEvents();
-  }
-
-  Future<void> loadEvents() async {
-    final events = await eventService.getAllEvent();
-    setState(() {
-      items = events;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final al = AppLocalizations.of(context)!;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(al.appTitle),
-        actions: [
-          PopupMenuButton<CalendarView>(
-            onSelected: (value) {
-              setState(() {
-                calendarController.view = value;
-              });
-            },
-            itemBuilder: (context) => CalendarView.values.map((view) {
-              return PopupMenuItem<CalendarView>(
-                value: view,
-                child: ListTile(
-                  title: Text(view.name),
-                ),
-              );
-            }).toList(),
-            icon: getCalendarViewIcon(calendarController.view!),
-          ),
-          IconButton(
-            onPressed: () {
-              calendarController.displayDate = DateTime.now();
-            },
-            icon: Icon(Icons.today_outlined),
-          ),
-          IconButton(onPressed: loadEvents, icon: Icon(Icons.refresh))
+void main() {
+  testWidgets(
+      'EventView hiển thị danh sách sự kiện và tương tác với người dùng',
+      (WidgetTester tester) async {
+    // Xây dựng ứng dụng
+    await tester.pumpWidget(
+      const MaterialApp(
+        localizationsDelegates: [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
         ],
-      ),
-      body: SfCalendar(
-        controller: calendarController,
-        dataSource: EventDataSource(items),
-        monthViewSettings: const MonthViewSettings(
-            appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
-        // Nhấn giữ vào cell để thêm sự kiện
-        onLongPress: (details) {
-          // Không có sự kiện trong cell
-          if (details.targetElement == CalendarElement.calendarCell) {
-            // Tạo một đối tượng sự kiện tại thời gian trong lịch theo giao diện
-            final newEvent = EventModel(
-                startTime: details.date!,
-                endTime: details.date!.add(const Duration(hours: 1)),
-                subject: 'Sự kiện mới');
-            // Điều hướng và định tuyến bằng cách đưa newEvent vào detail view
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) {
-                return EventDetailView(event: newEvent);
-              },
-            )).then((value) async {
-              // Sau khi pop ở detail view
-              if (value == true) {
-                await loadEvents();
-              }
-            });
-          }
-        },
-        // Chạm vào sự kiện để xem và cập nhật
-        onTap: (details) {
-          // Khi touch vào sự kiện-> sửa hoặc xóa
-          if (details.targetElement == CalendarElement.appointment) {
-            final EventModel event = details.appointments!.first;
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) {
-                return EventDetailView(event: event);
-              },
-            )).then((value) async {
-              // Sau khi pop ở detail view
-              if (value == true) {
-                await loadEvents();
-              }
-            });
-          }
-        },
+        supportedLocales: [Locale('en'), Locale('vi')],
+        locale: Locale('vi'),
+        home: EventView(),
       ),
     );
-  }
 
-  // Hàm lấy icon tương ứng với calendar view
-  Icon getCalendarViewIcon(CalendarView view) {
-    switch (view) {
-      case CalendarView.day:
-        return const Icon(Icons.calendar_view_day_outlined);
-      case CalendarView.week:
-        return const Icon(Icons.calendar_view_week_outlined);
-      case CalendarView.workWeek:
-        return const Icon(Icons.work_history_outlined);
-      case CalendarView.month:
-        return const Icon(Icons.calendar_view_month_outlined);
-      case CalendarView.schedule:
-        return const Icon(Icons.schedule_outlined);
-      default:
-        return const Icon(Icons.calendar_today_outlined);
-    }
-  }
+    // Lấy AppLocalizations
+    final al = await AppLocalizations.delegate.load(const Locale('vi'));
+
+    // Kiểm tra tiêu đề ứng dụng
+    expect(find.text(al.appTitle), findsOneWidget);
+
+    // Kiểm tra nút chuyển đổi chế độ xem lịch
+    expect(find.byType(PopupMenuButton<CalendarView>), findsOneWidget);
+
+    // Kiểm tra sự kiện giả (nếu có)
+    // Lưu ý: Bạn cần mock dữ liệu hoặc thiết lập trạng thái cho items trong EventView
+    // Nếu không, danh sách sự kiện sẽ rỗng và không hiển thị gì
+  });
 }

@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 class EventModel {
@@ -12,7 +13,7 @@ class EventModel {
     this.id,
     required this.startTime,
     required this.endTime,
-    this.isAllDay = false, //mặc định
+    this.isAllDay = false,
     this.subject = '',
     this.notes,
     this.recurrenceRule,
@@ -99,9 +100,9 @@ class EventModel {
   }
 }
 
-extension ExtEventModel on EventModel {
+extension ExEventModel on EventModel {
   String get formatedStartTimeString =>
-      '${startTime.minute}, ${startTime.day} / ${startTime.month}/ ${startTime.year}';
+      '${startTime.hour}:${startTime.minute}, ${startTime.day}/${startTime.month}/${startTime.year}';
   String get formatedEndTimeString =>
-      '${endTime.minute}, ${endTime.day} / ${endTime.month}/ ${endTime.year}';
+      '${endTime.hour}:${endTime.minute}, ${endTime.day}/${endTime.month}/${endTime.year}';
 }

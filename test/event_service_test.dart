@@ -1,39 +1,33 @@
-import 'package:localstore/localstore.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:event_manager/event/event_service.dart';
+import 'package:event_manager/event/event_model.dart';
 
-import 'event_model_test.dart';
+void main() {
+  final eventService = EventService();
 
-class EventService {
-  // Tham khảo thêm thư viện localstore của mình tại http://pub.dev
-  final db = Localstore.getInstance(useSupportDir: true);
+  test('EventService có thể lưu và lấy sự kiện', () async {
+    // Tạo một sự kiện mới
+    final event = EventModel(
+      id: 'test-id',
+      startTime: DateTime.now(),
+      endTime: DateTime.now().add(const Duration(hours: 1)),
+      subject: 'Sự kiện kiểm thử',
+    );
 
-  // Tên collection trong localstore (giống như tên bảng)
-  final path = 'events';
+    // Lưu sự kiện
+    await eventService.saveEvent(event);
 
-  // Hàm lấy danh sách sự kiên từ localstore
-  Future<List<EventModel>> getAllEvent() async {
-    final eventsMap = await db.collection(path).get();
+    // Lấy tất cả sự kiện
+    final events = await eventService.getAllEvent();
 
-    if (eventsMap != null) {
-      return eventsMap.entries.map((entry) {
-        final eventData = entry.value as Map<String, dynamic>;
-        if (!eventData.containsKey('id')) {
-          eventData['id'] = entry.key.split('/').last;
-        }
-        return EventModel.fromMap(eventData);
-      }).toList();
-    }
-    return [];
-  }
+    // Kiểm tra xem sự kiện có trong danh sách hay không
+    expect(events.any((e) => e.id == 'test-id'), true);
 
-  // Hàm luwumootj sự kiện vào localstore
-  Future<void> saveEvent(EventModel item) async {
-    // Nếu id không tồn tại (tạo mới) thì lấy một id ngẫu nhiên
-    item.id ??= db.collection(path).doc().id;
-    await db.collection(path).doc(item.id).set(item.toMap());
-  }
+    // Xóa sự kiện
+    await eventService.deleteEvent(event);
 
-  // Hàm xóa một sự kiện từ localstore
-  Future<void> deleteEvent(EventModel item) async {
-    await db.collection(path).doc(item.id).delete();
-  }
+    // Kiểm tra xem sự kiện đã bị xóa
+    final eventsAfterDelete = await eventService.getAllEvent();
+    expect(eventsAfterDelete.any((e) => e.id == 'test-id'), false);
+  });
 }
