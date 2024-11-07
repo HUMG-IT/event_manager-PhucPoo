@@ -1,6 +1,6 @@
 import 'package:localstore/localstore.dart';
 
-import 'event_model_test.dart';
+import 'event_model.dart';
 
 class EventService {
   // Tham khảo thêm thư viện localstore của mình tại http://pub.dev

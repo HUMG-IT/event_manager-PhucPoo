@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
-import 'event_model_test.dart';
+import 'event_model.dart';
 
 // DataSource: Tham khảo thư viện syncfusion_flutter_calendar tại http://pub.dev
 class EventDataSource extends CalendarDataSource {
