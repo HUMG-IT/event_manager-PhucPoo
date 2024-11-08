@@ -19,7 +19,7 @@ void main() {
     await eventService.saveEvent(event);
 
     // Lấy tất cả sự kiện
-    final events = await eventService.getAllEvent();
+    final events = await eventService.getAllEvents();
 
     // Kiểm tra xem sự kiện có trong danh sách hay không
     expect(events.any((e) => e.id == 'test-id'), true);
@@ -28,7 +28,7 @@ void main() {
     await eventService.deleteEvent(event);
 
     // Kiểm tra xem sự kiện đã bị xóa
-    final eventsAfterDelete = await eventService.getAllEvent();
+    final eventsAfterDelete = await eventService.getAllEvents();
     expect(eventsAfterDelete.any((e) => e.id == 'test-id'), false);
   });
 }

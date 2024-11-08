@@ -4,7 +4,6 @@ import 'package:event_manager/event/event_detail_view.dart';
 import 'package:event_manager/event/event_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class EventView extends StatefulWidget {
@@ -30,7 +29,7 @@ class _EventViewState extends State<EventView> {
   }
 
   Future<void> loadEvents() async {
-    final events = await eventService.getAllEvent();
+    final events = await eventService.getAllEvents();
     setState(() {
       items = events;
     });
@@ -63,9 +62,9 @@ class _EventViewState extends State<EventView> {
             onPressed: () {
               calendarController.displayDate = DateTime.now();
             },
-            icon: Icon(Icons.today_outlined),
+            icon: const Icon(Icons.today_outlined),
           ),
-          IconButton(onPressed: loadEvents, icon: Icon(Icons.refresh))
+          IconButton(onPressed: loadEvents, icon: const Icon(Icons.refresh))
         ],
       ),
       body: SfCalendar(

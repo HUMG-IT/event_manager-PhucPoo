@@ -10,7 +10,7 @@ class EventService {
   final path = 'events';
 
   // Hàm lấy danh sách sự kiên từ localstore
-  Future<List<EventModel>> getAllEvent() async {
+  Future<List<EventModel>> getAllEvents() async {
     final eventsMap = await db.collection(path).get();
 
     if (eventsMap != null) {

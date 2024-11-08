@@ -20,7 +20,11 @@ class MainApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate
       ],
-      locale: Locale('vi'), //Ngôn ngữ xác định
+      supportedLocales: [
+        Locale('en', 'US'), // Hỗ trợ Tiếng Anh
+        Locale('vi', 'VN'), // Hỗ trợ Tiếng Việt
+      ],
+      locale: Locale('vi'),
       home: EventView(),
     );
   }

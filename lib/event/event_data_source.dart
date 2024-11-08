@@ -23,7 +23,7 @@ class EventDataSource extends CalendarDataSource {
   }
 
   @override
-  String getSubbject(int index) {
+  String getSubject(int index) {
     EventModel item = appointments!.elementAt(index);
     return item.subject;
   }
